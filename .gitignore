@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+.pnpm-store
 
 /.idea/*
 !/.idea/runConfigurations
@@ -31,9 +32,6 @@ yarn-error.log*
 # local env files
 .env*.local
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
@@ -48,3 +46,7 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# IDE specific files
+.vscode/
+.cursor/

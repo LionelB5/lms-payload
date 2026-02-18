@@ -8,7 +8,7 @@ const Layout: FC<TemplateProps> = async ({ children }) => {
   const customer = await getCustomer()
   console.info(customer)
   if (!customer) {
-    redirect('/foo')
+    redirect('/login')
     return null
   }
   return <>{children}</>

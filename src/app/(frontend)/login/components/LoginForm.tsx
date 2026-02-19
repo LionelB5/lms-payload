@@ -42,6 +42,12 @@ const LoginForm: React.FC = () => {
           {error && <div className="text-red-500">{error}</div>}
           <SubmitButton loading={isPending} text="Login" />
         </form>
+        <p className="mt-10 text-center text-sm text-gray-400">
+          Don&apos;t have an account?{' '}
+          <a href="/register" className="text-blue-500">
+            Signup
+          </a>
+        </p>
       </div>
     </div>
   )

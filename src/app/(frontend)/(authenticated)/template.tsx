@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import React, { FC, ReactNode } from 'react'
 import { getCustomer } from './actions/getCustomer'
+import Navbar from './components/navbar'
 
 type TemplateProps = { children: ReactNode }
 
@@ -11,7 +12,12 @@ const Layout: FC<TemplateProps> = async ({ children }) => {
     redirect('/login')
     return null
   }
-  return <>{children}</>
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  )
 }
 
 export default Layout

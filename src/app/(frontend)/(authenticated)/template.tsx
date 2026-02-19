@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import React, { FC, ReactNode } from 'react'
 import { getCustomer } from './actions/getCustomer'
-import Navbar from './components/navbar'
+import Navbar from './components/Navbar'
 
 type TemplateProps = { children: ReactNode }
 

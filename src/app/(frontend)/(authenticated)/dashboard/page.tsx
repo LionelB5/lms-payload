@@ -14,7 +14,7 @@ const Page: React.FC = async () => {
 
   let courses: Course[] = []
   try {
-    let coursesRes = await payload.find({
+    const coursesRes = await payload.find({
       collection: 'courses',
       limit: 10,
       overrideAccess: false,

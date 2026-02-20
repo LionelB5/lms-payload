@@ -2,6 +2,7 @@
 
 import { Course, Participation } from '@/payload-types'
 import VideoModule from './VideoModule'
+import QuizModule from './QuizModule'
 
 type ModuleProps = {
   module: NonNullable<Course['curriculum']>[number]
@@ -14,7 +15,7 @@ export default function CourseModule({ module, participation, onCompleted }: Mod
     case 'video':
       return <VideoModule module={module} participation={participation} onCompleted={onCompleted} />
     case 'quiz':
-      return 'quiz module'
+      return <QuizModule module={module} participation={participation} onCompleted={onCompleted} />
     default:
       return <div>Unknown module type</div>
   }

@@ -4,13 +4,14 @@ import { getPayload } from 'payload'
 import React, { Suspense } from 'react'
 import configPromise from '@payload-config'
 import Image from 'next/image'
-import { Course, Media } from '@/payload-types'
+import { Course, Media, Participation } from '@/payload-types'
 import Link from 'next/link'
 import { getCustomer } from '../actions/getCustomer'
+import ResumeCourseButton from './course/[courseId]/components/ResumeCourseButton'
 
 const Page: React.FC = async () => {
   const payload = await getPayload({ config: configPromise })
-  const user = await getCustomer()
+  const customer = await getCustomer()
 
   let courses: Course[] = []
   try {
@@ -18,17 +19,42 @@ const Page: React.FC = async () => {
       collection: 'courses',
       limit: 10,
       overrideAccess: false,
-      user,
+      user: customer,
     })
     courses = coursesRes.docs
   } catch (e) {
     console.log(e)
   }
 
+  let participations: Participation[] = []
+  try {
+    participations =
+      (
+        await payload.find({
+          collection: 'participation',
+          where: { customer: { equals: customer?.id } },
+          overrideAccess: false,
+          user: customer,
+        })
+      )?.docs ?? []
+  } catch (error) {
+    console.log(error)
+  }
+
   return (
     <div className="flex flex-col mx-auto w-full max-w-4xl p-4 gap-4">
       <div className="text-xl">
-        Welcome <span className="text-gray-400">{user?.email}</span>
+        Welcome <span className="text-gray-400">{customer?.email}</span>
+      </div>
+      {participations && participations.length > 0 && (
+        <div className="text-sm text-teal-400">Your Courses</div>
+      )}
+      <div className="grid grid-cols-3 gap-4">
+        <Suspense fallback={<div>Loading...</div>}>
+          {participations.map((participation) => (
+            <ResumeCourseButton key={participation.id} participation={participation} />
+          ))}
+        </Suspense>
       </div>
       <div className="text-sm text-teal-400">All Courses</div>
       <div className="grid grid-cols-2 gap-4">

@@ -2,12 +2,13 @@ import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { getCustomer } from '../../../actions/getCustomer'
-import { Course, Media } from '@/payload-types'
+import { Course, Media, Participation } from '@/payload-types'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { HiArrowLeft, HiPencilAlt, HiVideoCamera } from 'react-icons/hi'
 import Image from 'next/image'
 import StartCourseButton from './components/StartCourseButton'
+import ResumeCourseButton from './components/ResumeCourseButton'
 
 const CoursePage: React.FC<{ params: Promise<{ courseId: string }> }> = async ({ params }) => {
   const { courseId } = await params
@@ -29,6 +30,21 @@ const CoursePage: React.FC<{ params: Promise<{ courseId: string }> }> = async ({
 
   if (!course) {
     return notFound()
+  }
+
+  let participation: Participation | null = null
+  try {
+    participation =
+      (
+        await payload.find({
+          collection: 'participation',
+          where: { course: { equals: courseId }, customer: { equals: customer?.id } },
+          overrideAccess: false,
+          user: customer,
+        })
+      )?.docs[0] ?? null
+  } catch (error) {
+    console.error(error)
   }
 
   return (
@@ -78,7 +94,13 @@ const CoursePage: React.FC<{ params: Promise<{ courseId: string }> }> = async ({
           })}
         </div>
       </div>
-      <StartCourseButton courseId={courseId} />
+      {participation ? (
+        <div className="flex w-72">
+          <ResumeCourseButton participation={participation} />
+        </div>
+      ) : (
+        <StartCourseButton courseId={courseId} />
+      )}
     </div>
   )
 }

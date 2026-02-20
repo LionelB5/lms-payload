@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { HiArrowLeft, HiPencilAlt, HiVideoCamera } from 'react-icons/hi'
 import Image from 'next/image'
+import StartCourseButton from './components/StartCourseButton'
 
 const CoursePage: React.FC<{ params: Promise<{ courseId: string }> }> = async ({ params }) => {
   const { courseId } = await params
@@ -77,6 +78,7 @@ const CoursePage: React.FC<{ params: Promise<{ courseId: string }> }> = async ({
           })}
         </div>
       </div>
+      <StartCourseButton courseId={courseId} />
     </div>
   )
 }

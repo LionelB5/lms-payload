@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 
-interface LogoutResponse {
+type LogoutResponse = {
   success: boolean
   error?: string
 }

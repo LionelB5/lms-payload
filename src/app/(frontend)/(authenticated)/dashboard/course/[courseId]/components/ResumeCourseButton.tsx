@@ -6,12 +6,13 @@ const ResumeCourseButton: React.FC<{ participation: Participation }> = ({ partic
   const course = participation.course as Course
   const courseLength = course.curriculum?.length ?? 0
   const progress = participation.progress ?? 0
-  const progressPercentage = (progress / courseLength) * 100
+  // we subtract 1 as the finish block should not count towards the progress percentage
+  const progressPercentage = (progress / (courseLength - 1)) * 100
 
   return (
     <Link
       href={`/dashboard/participation/${participation.id}`}
-      className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold rounded transition ease-in-out duration-300 overflow-hidden"
+      className="relative w-full bg-teal-500 hover:bg-teal-600 text-white font-bold rounded transition ease-in-out duration-300 overflow-hidden"
     >
       <div className="flex flex-row items-center justify-between pl-2">
         <p className="text-sm font-semibold">{course.title}</p>

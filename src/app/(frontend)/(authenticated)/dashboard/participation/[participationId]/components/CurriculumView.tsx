@@ -2,7 +2,7 @@
 
 import { Course } from '@/payload-types'
 import { useEffect, useRef } from 'react'
-import { HiVideoCamera, HiPencilAlt } from 'react-icons/hi'
+import { HiVideoCamera, HiPencilAlt, HiFlag } from 'react-icons/hi'
 
 export default function CurriculumView({
   course,
@@ -56,7 +56,16 @@ export default function CurriculumView({
           )
         }
 
-        return null
+        if (block.blockType === 'finish') {
+          return (
+            <div key={idx} {...commonProps}>
+              <div className="text-green-400 font-medium flex items-center gap-2">
+                <HiFlag className="text-xl" />
+                Certificate
+              </div>
+            </div>
+          )
+        }
       })}
     </div>
   )

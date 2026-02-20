@@ -5,8 +5,10 @@ import { useState } from 'react'
 import CurriculumView from './CurriculumView'
 import CourseModule from './CourseModule'
 
-const CourseView: React.FC<{ participation: Participation }> = ({ participation }) => {
-  const [currentProgress, setCurrentProgress] = useState(participation?.progress || 0)
+const CourseView: React.FC<{
+  participation: Participation
+}> = ({ participation }) => {
+  const [currentProgress, setCurrentProgress] = useState(participation.progress)
 
   const course = participation.course as Course
   const curriculum = course.curriculum ?? []

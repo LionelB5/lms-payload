@@ -1,6 +1,6 @@
 'use client'
 
-import { Course, Participation } from '@/payload-types'
+import { Course } from '@/payload-types'
 import { useEffect, useState } from 'react'
 import { HiArrowRight } from 'react-icons/hi2'
 import NextButton from './NextButton'
@@ -8,12 +8,12 @@ import { markProgress } from '../actions/markProgress'
 
 export default function QuizModule({
   module,
-  participation,
+  participationId,
   onCompleted,
 }: {
   module: Extract<NonNullable<Course['curriculum']>[number], { blockType: 'quiz' }>
   onCompleted: (nextIndex: number) => void
-  participation: Participation
+  participationId: string
 }) {
   const [message, setMessage] = useState('')
   const [userAnswers, setUserAnswers] = useState<boolean[][]>([])
@@ -50,7 +50,7 @@ export default function QuizModule({
   async function handleNextModule() {
     setLoading(true)
     try {
-      const updatedParticipation = await markProgress(participation)
+      const updatedParticipation = await markProgress(participationId)
       if (updatedParticipation && updatedParticipation.progress) {
         onCompleted(updatedParticipation.progress)
       } else {

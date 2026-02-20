@@ -1,17 +1,17 @@
 'use client'
 
-import { Course, Participation } from '@/payload-types'
+import { Course } from '@/payload-types'
 import { useState } from 'react'
 import { markProgress } from '../actions/markProgress'
 import NextButton from './NextButton'
 
 export default function VideoModule({
   module,
-  participation,
+  participationId,
   onCompleted,
 }: {
   module: Extract<NonNullable<Course['curriculum']>[number], { blockType: 'video' }>
-  participation: Participation
+  participationId: string
   onCompleted: (nextIndex: number) => void
 }) {
   const [loading, setLoading] = useState(false)
@@ -19,7 +19,7 @@ export default function VideoModule({
   async function handleNextModule() {
     setLoading(true)
     try {
-      const updatedParticipation = await markProgress(participation)
+      const updatedParticipation = await markProgress(participationId)
       if (updatedParticipation && updatedParticipation.progress) {
         onCompleted(updatedParticipation.progress)
       } else {

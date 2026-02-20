@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload'
 import { VideoBlock } from '../blocks/VideoBlock'
 import { QuizBlock } from '../blocks/QuizBlock'
+import { FinishBlock } from '../blocks/FinishBlock'
 
 export const Courses: CollectionConfig = {
   slug: 'courses',
@@ -15,6 +16,11 @@ export const Courses: CollectionConfig = {
     { name: 'title', label: 'Title', type: 'text', required: true },
     { name: 'description', label: 'Description', type: 'textarea', required: true },
     { name: 'image', label: 'Image', type: 'relationship', relationTo: 'media', required: true },
-    { name: 'curriculum', label: 'Curriculum', type: 'blocks', blocks: [VideoBlock, QuizBlock] },
+    {
+      name: 'curriculum',
+      label: 'Curriculum',
+      type: 'blocks',
+      blocks: [VideoBlock, QuizBlock, FinishBlock],
+    },
   ],
 }

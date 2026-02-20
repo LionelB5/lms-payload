@@ -80,7 +80,8 @@ const CoursePage: React.FC<{ params: Promise<{ courseId: string }> }> = async ({
                   <div className="text-sm text-gray-400">{block.duration} min</div>
                 </div>
               )
-            } else {
+            }
+            if (block.blockType === 'quiz') {
               return (
                 <div key={id} className="p-4 border border-gray-700 rounded bg-gray-900">
                   <div className="text-yellow-400 font-semibold flex items-center gap-2">

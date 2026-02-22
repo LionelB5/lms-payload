@@ -63,7 +63,7 @@ export default function page(): ReactElement {
             href={'/signup'}
             className="px-6 py-2 border border-white hover:bg-white hover:text-black transition"
           >
-            Enroll Now
+            Enrol Now
           </Link>
         </div>
       </section>

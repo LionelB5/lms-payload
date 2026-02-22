@@ -1,67 +1,89 @@
-# Payload Blank Template
+# Course platform built with Payload CMS
 
-This template comes configured with the bare minimum to get started on anything you need.
+This is a project to learn more about [Payload CMS](https://github.com/payloadcms/payload), a
+Next.js framework offering headless CMS functionality.
 
-## Quick start
+I followed [this course](https://youtube.com/playlist?list=PLPZcitw0PKPcjA2ZholMdQF0R2tTkX6to)
+available on youtube to put together the project.
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+## What this project features
 
-## Quick Start - local setup
+This project has the following functionality:
 
-To spin up this template locally, follow these steps:
+- User registration/login system, including forgotten password flow.
+- Logged in users can view and enrol in available courses.
+- Once enrolled in a course, the user can view its content (videos, quizzes).
+- Progress through each course is saved to the user's account and displayed on the website.
+- Upon completion of a course the user can generate a certificate of completion.
+- Administrators can login to the backend and can configure course content such
+  as quizzes, videos, and certificate templates.
 
-### Clone
+## Technical details
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+Some technical details of the project:
 
-### Development
+- All items uploaded to the `media` collection are stored in S3.
+- Emails are sent via the (Brevo)[https://www.brevo.com/] service (we use this service as its
+  free tier is a quick and easy solution for email functionality).
+- Course videos are hosted using the (Bunny)[https://bunny.net/] CDN.
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+## Drawbacks
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+The project isn't perfect, it was put together quickly to learn some Payload CMS basics:
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+- Ideally we'd generate PDF certificates, however the API used to convert HTML -> PDF used by
+  the course no longer exists, so for now we just return a HTML certificate to the client.
+- The course instructs to guard the `(authenticated)` routes by checking the user object in
+  `template.tsx`. Brief mention during the course that a more performant solution might be to
+  perform the authentication check in a custom middleware instead, need to investigate further.
+- The `QuizModule` contains convoluted logic and should be cleaned up.
+- State management is handled poorly. In the
+  `/(authenticated)/dashboard/participation/[participationId]` route's page, we retrieve the logged
+  in user's `Participation` object relating to the selected course and pass this object down
+  to several components. As the user progresses through the course `Participation.progress` will
+  be updated on the backend, and this participation object will go out of date (until the user
+  refreshes the page, for instance). There is no impact on the actual behaviour of the application,
+  but it's a footgun and bad smell to be passing around an object with outdated properties.
 
-#### Docker (Optional)
+## Local development
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+The application relies on a Next.js server and a MongoDB database (to support Payload CMS).
 
-To do so, follow these steps:
+To run the application locally:
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+1. Copy `.env.example` to `.env` and update values containing `CHANGE_ME`.
+   - Note that a MongoDB database can be spun up using the supplied `docker-compose.yml`, and
+     you can point the application to this DB using the `DATABASE_URL` env var.
+   - You'll need to create an S3 Bucket and generate a set of credentials so the
+     application is able to access it for media uploads.
+2. Spin up the application by either:
+   - Executing a `docker compose up`. This will bring up two containers, one running Next.js
+     and the other running MongoDB.
+   - Executing `npm install && npm run dev`, you can optionally run `docker compose up mongo` to
+     spin up a MongoDB container.
 
-## How it works
+Optionally, you can seed the database using the provided database dump.
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+1. Unzip `database-dump`.
+2. Use a tool like `mongorestore` to restore the `test` database.
 
-### Collections
+```bash
+mongorestore \
+  --uri="mongodb://localhost:27017/" \
+  --db test \
+  database-dump/test
+```
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+When configuring `DATABASE_URL` ensure you specify `test` as the database name i.e `mongodb://mongo:27017/test`.
 
-- #### Users (Authentication)
+The credentials for the Payload CMS admin user are:
 
-  Users are auth-enabled collections that have access to the admin panel.
+- Username: test@test.local
+- Password: foobar
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+## Deployment
 
-- #### Media
+This repo doesn't contain IaC or other code/scripts to perform automated deployments.
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+The `Dockerfile` however makes it quite straightforward to deploy the Next.js application to a
+service of your choosing (ECS/Fargate on AWS, docker running on a VPS etc.).

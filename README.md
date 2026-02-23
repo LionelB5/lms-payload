@@ -23,9 +23,9 @@ This project has the following functionality:
 Some technical details of the project:
 
 - All items uploaded to the `media` collection are stored in S3.
-- Emails are sent via the (Brevo)[https://www.brevo.com/] service (we use this service as its
+- Emails are sent via the [Brevo](https://www.brevo.com/) service (we use this service as its
   free tier is a quick and easy solution for email functionality).
-- Course videos are hosted using the (Bunny)[https://bunny.net/] CDN.
+- Course videos are hosted using the [Bunny](https://bunny.net/) CDN.
 
 ## Drawbacks
 
